@@ -1,0 +1,58 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sapia}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sapia_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-sapia}
+    ports:
+      - "5432:5432"
+    volumes:
+      - sapia_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sapia}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-sapia}:${POSTGRES_PASSWORD:-sapia_dev}@db:5432/${POSTGRES_DB:-sapia}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - sapia_uploads:/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head &&
+             python scripts/seed_demo.py &&
+             python -m ml.train &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - api
+
+volumes:
+  sapia_pgdata:
+  sapia_uploads:

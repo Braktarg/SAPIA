@@ -1,0 +1,14 @@
+# Monorepo: despliegue del servicio API desde la raíz del repositorio.
+# El contexto de build es sapia/; el código FastAPI vive en backend/.
+# Alternativa: Railway → servicio api → Settings → Root Directory = backend
+# (entonces se usa backend/railway.toml sin este archivo).
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.railway"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5

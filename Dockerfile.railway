@@ -1,0 +1,24 @@
+# Build del API SAPIA cuando Railway usa la raíz del monorepo (GitHub / railpack).
+# Para deploy solo desde backend/, ver backend/Dockerfile.railway.
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/ .
+
+RUN chmod +x scripts/start_prod.sh
+
+ENV UPLOAD_DIR=/tmp/uploads
+ENV PYTHONUNBUFFERED=1
+
+EXPOSE 8000
+
+CMD ["sh", "scripts/start_prod.sh"]
