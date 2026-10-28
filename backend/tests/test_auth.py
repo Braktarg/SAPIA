@@ -163,4 +163,7 @@ def test_me_returns_role(client: TestClient):
 
 
 def test_health(client: TestClient):
-    assert client.get("/health").json() == {"status": "ok"}
+    body = client.get("/health").json()
+    assert body["status"] == "ok"
+    assert isinstance(body["openai_configured"], bool)
+    assert isinstance(body["llm_model"], str)

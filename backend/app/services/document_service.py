@@ -1,4 +1,5 @@
 import json
+import os
 import time
 import uuid
 from pathlib import Path
@@ -25,7 +26,8 @@ PDF_MAGIC = b"%PDF"
 
 
 def ensure_upload_dir() -> Path:
-    path = Path(settings.upload_dir)
+    raw = os.environ.get("UPLOAD_DIR") or settings.upload_dir
+    path = Path(raw)
     path.mkdir(parents=True, exist_ok=True)
     return path
 
