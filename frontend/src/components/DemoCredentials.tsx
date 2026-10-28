@@ -20,12 +20,6 @@ const ACCOUNTS: DemoAccount[] = [
     password: "Sapia2026!",
     hint: "Panel seguimiento y exportación",
   },
-  {
-    role: "Estudiante (caso tribunal)",
-    email: "antonia.vega@8vo.demo.sapia.cl",
-    password: "Sapia2026!",
-    hint: "Antonia Vega — 8° Básico",
-  },
 ];
 
 type Props = {

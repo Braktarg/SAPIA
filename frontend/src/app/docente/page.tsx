@@ -47,7 +47,6 @@ export default function DocenteHomePage() {
   const attentionStudents = students.filter((s) =>
     ["no_profile", "pending", "alert"].includes(s.attention_level ?? ""),
   );
-  const antonia = students.find((s) => s.email.includes("antonia.vega"));
 
   const courseName = courses.find((c) => c.id === courseId)?.name;
 
@@ -91,27 +90,6 @@ export default function DocenteHomePage() {
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
-
-      {antonia && (
-        <div className="featured-case card">
-          <div className="featured-case-badge">Caso demo — defensa tribunal</div>
-          <h2>Antonia Vega</h2>
-          <p className="text-muted">
-            Estudiante 8° Básico · perfil neurodivergente simulado · unidad «Ecuaciones lineales»
-          </p>
-          <div className="btn-group">
-            <Link
-              href={`/docente/recomendaciones?student=${antonia.id}&topic=${encodeURIComponent("Ecuaciones lineales")}`}
-              className="btn btn-primary"
-            >
-              Generar recomendación IA
-            </Link>
-            <Link href={`/docente/estudiantes`} className="btn btn-secondary">
-              Ver ficha y radar
-            </Link>
-          </div>
-        </div>
-      )}
 
       {setup && (
         <>

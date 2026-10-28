@@ -7,7 +7,6 @@ import sys
 import time
 import urllib.request
 
-import httpx
 from playwright.sync_api import sync_playwright
 
 BASE_URL = "http://localhost:3000"
@@ -57,29 +56,6 @@ def run() -> int:
         ok = "/login" not in page.url
         results.append(("BB-UI-003 Bandeja MitL accesible", ok))
         print(f"  [{'PASS' if ok else 'FAIL'}] BB-UI-003 Bandeja MitL ({page.url})")
-
-        # BB-UI-004: estudiante bloqueado en ruta docente (nueva sesión)
-        ctx2 = browser.new_context()
-        page2 = ctx2.new_page()
-        resp = httpx.post(
-            f"{API_URL}/api/v1/auth/login",
-            json={"email": "antonia.vega@8vo.demo.sapia.cl", "password": "Sapia2026!"},
-            timeout=15,
-        )
-        token = resp.json()["access_token"]
-        role = httpx.get(
-            f"{API_URL}/api/v1/auth/me",
-            headers={"Authorization": f"Bearer {token}"},
-            timeout=15,
-        ).json()["role"]
-        ctx2.add_cookies([
-            {"name": "sapia_token", "value": token, "domain": "localhost", "path": "/"},
-            {"name": "sapia_role", "value": role, "domain": "localhost", "path": "/"},
-        ])
-        page2.goto(f"{BASE_URL}/docente", wait_until="networkidle")
-        ok = "/estudiante" in page2.url or "/login" in page2.url
-        results.append(("BB-UI-004 RBAC estudiante no /docente", ok))
-        print(f"  [{'PASS' if ok else 'FAIL'}] BB-UI-004 RBAC estudiante ({page2.url})")
 
         browser.close()
 

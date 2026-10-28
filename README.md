@@ -25,7 +25,6 @@ docker compose up --build
 |-----|-------|------------|
 | Admin | admin@demo.sapia.cl | Sapia2026! |
 | Docente | docente@demo.sapia.cl | Sapia2026! |
-| Estudiante | estudiante@demo.sapia.cl | Sapia2026! |
 
 **Registro público (RF-01/02):** `/register` con código institucional `DEMO-SAPIA`.
 

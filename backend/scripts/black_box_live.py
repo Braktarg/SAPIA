@@ -10,7 +10,6 @@ import urllib.request
 
 BASE = "http://localhost:8000"
 DOCENTE = ("docente@demo.sapia.cl", "Sapia2026!")
-ESTUDIANTE = ("antonia.vega@8vo.demo.sapia.cl", "Sapia2026!")
 
 
 def req(method: str, path: str, token: str | None = None, body: dict | None = None) -> tuple[int, dict | str]:
@@ -61,21 +60,11 @@ def run() -> int:
     code, me = req("GET", "/api/v1/auth/me", token=teacher_token)
     check("BB-API-003 Login docente + /me", code == 200 and me.get("role") == "teacher")
 
-    student_token = login(*ESTUDIANTE)
-    code, _ = req("GET", "/api/v1/recommendations/inbox", token=student_token)
-    check("BB-API-004 RBAC estudiante no inbox docente", code == 403, f"HTTP {code}")
-
-    code, items = req("GET", "/api/v1/diagnostic/items", token=student_token)
-    check("BB-API-005 Test diagnóstico 12 ítems", code == 200 and len(items) == 12, f"n={len(items) if isinstance(items, list) else '?'}")
-
     code, inbox = req("GET", "/api/v1/recommendations/inbox", token=teacher_token)
-    check("BB-API-006 Bandeja MitL docente", code == 200 and isinstance(inbox, list))
-
-    code, _ = req("GET", "/api/v1/student/recommendations", token=student_token)
-    check("BB-API-007 Vista estudiante recomendaciones", code == 200)
+    check("BB-API-004 Bandeja MitL docente", code == 200 and isinstance(inbox, list))
 
     code, _ = req("GET", "/openapi.json")
-    check("BB-API-008 Contrato OpenAPI accesible", code == 200, f"HTTP {code}")
+    check("BB-API-005 Contrato OpenAPI accesible", code == 200, f"HTTP {code}")
 
     passed = sum(1 for _, ok, _ in results if ok)
     total = len(results)

@@ -69,7 +69,7 @@ def test_student_evidence_includes_all_descriptors_with_scores():
     ]
     pkg = build_student_evidence_package(
         planning_topic="Ecuaciones cuadráticas",
-        student_name="Antonia Vega",
+        student_name="Estudiante",
         student_id=1,
         descriptors=profiles,
         chunks=[_chunk("OA: Resolver ecuaciones lineales ax+b=c", unit="Ecuaciones Lineales")],
@@ -116,7 +116,7 @@ def test_course_evidence_package_has_table_and_tiers():
 def test_student_evidence_rows_include_rationale():
     pkg = build_student_evidence_package(
         planning_topic="Ecuaciones cuadráticas",
-        student_name="Antonia Vega",
+        student_name="Estudiante",
         student_id=1,
         descriptors=[
             {"key": "razonamiento_logico", "label": "Razonamiento lógico", "value": 0.45},

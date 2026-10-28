@@ -111,7 +111,6 @@ Redeploy API si cambias CORS.
 | Rol | Email | Contraseña |
 |-----|-------|------------|
 | Docente | docente@demo.sapia.cl | Sapia2026! |
-| Estudiante | estudiante@demo.sapia.cl | Sapia2026! |
 | Coordinador | pie@demo.sapia.cl | Sapia2026! |
 
 Registro público: `/register` con código `DEMO-SAPIA`.

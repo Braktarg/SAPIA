@@ -9,9 +9,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.core.database import SessionLocal
 from app.core.enums import UserRole
 from app.core.security import hash_password
-from app.models import Course, CourseTeacher, DiagnosticItem, Enrollment, Organization, User
+from app.models import Course, CourseTeacher, DiagnosticItem, Organization, User
 from ml.questions import DIAGNOSTIC_QUESTIONS
-from scripts.demo_students_8vo import seed_8vo_classroom
 
 DEMO_PASSWORD = "Sapia2026!"
 COORDINATOR_EMAIL = "pie@demo.sapia.cl"
@@ -74,28 +73,18 @@ def seed() -> None:
                 full_name="Profesora Demo",
                 role=UserRole.TEACHER.value,
             )
-            student = User(
-                org_id=org.id,
-                email="estudiante@demo.sapia.cl",
-                password_hash=hash_password(DEMO_PASSWORD),
-                full_name="Matías Rojas",
-                birth_year=2012,
-                role=UserRole.STUDENT.value,
-            )
-            db.add_all([admin, teacher, student])
+            db.add_all([admin, teacher])
             db.flush()
 
             course = Course(org_id=org.id, name="8° Básico A", grade_level="8°")
             db.add(course)
             db.flush()
             db.add(CourseTeacher(course_id=course.id, teacher_id=teacher.id))
-            db.add(Enrollment(course_id=course.id, student_id=student.id))
             db.commit()
             print("Seed demo OK:")
             print(f"  admin:      admin@demo.sapia.cl / {DEMO_PASSWORD}")
             print(f"  docente:    docente@demo.sapia.cl / {DEMO_PASSWORD}")
             print(f"  coordinador:{COORDINATOR_EMAIL} / {DEMO_PASSWORD}")
-            print(f"  estudiante: estudiante@demo.sapia.cl / {DEMO_PASSWORD}")
         else:
             if not org.registration_code:
                 org.registration_code = "DEMO-SAPIA"
@@ -105,7 +94,6 @@ def seed() -> None:
         ensure_coordinator(db)
         seed_diagnostic_items(db)
         db.commit()
-        seed_8vo_classroom(db)
     finally:
         db.close()
 

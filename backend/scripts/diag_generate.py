@@ -20,7 +20,7 @@ result = generate_recommendation(
     planning_topic="Ecuaciones lineales",
     descriptors=desc,
     chunks=chunks,
-    student_name="Antonia Vega",
+    student_name="Estudiante",
     grade_level="8°",
     student_id=1,
 )
